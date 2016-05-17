@@ -18,7 +18,7 @@ def ensure_template_arg(func):
 
 @ensure_template_arg
 def get_variables_from_template(template):
-    variable_nodes = [n for n in template.nodelist if isinstance(n, DefineNode)]
+    variable_nodes = [n for n in _get_nodelist(template) if isinstance(n, DefineNode)]
     variables = SortedDict()
     for node in variable_nodes:
         if node.variable_name in variables:
@@ -38,6 +38,13 @@ def get_variables_from_template(template):
                 _get_template_name_from_node(node)
             ))
     return variables
+
+
+def _get_nodelist(template):
+    try:
+        return template.nodelist
+    except AttributeError:
+        return template.template.nodelist
 
 
 def _get_template_name_from_node(node):
